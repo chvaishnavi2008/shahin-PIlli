@@ -373,7 +373,7 @@ export const Hero: React.FC<HeroProps> = ({ onWatchIntro }) => {
                     {/* Circular Portrait with Transparent Mask */}
                     <div className="relative w-48 h-48 sm:w-56 sm:h-56 rounded-full overflow-hidden border-2 border-white/30 shadow-2xl bg-[#12141f] flex items-center justify-center">
                       <img
-                        src="/src/assets/images/shahin_pilli_avatar.png"
+                        src="/assets/images/shahin_pilli_avatar.png"
                         alt="Shahin Pilli - Official LinkedIn Profile Portrait"
                         className="w-full h-full object-cover group-hover/photo:scale-105 transition-transform duration-700 ease-out"
                         loading="eager"

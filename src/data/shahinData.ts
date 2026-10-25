@@ -123,7 +123,7 @@ export const VIDEO_STORIES: VideoStory[] = [
     duration: 'Broadcast Feature',
     venue: 'ABS-CBN Television Broadcast, Manila',
     year: 'Documented Broadcast',
-    thumbnail: '/src/assets/images/network_global_summit_1792820111711.jpg',
+    thumbnail: '/assets/images/network_global_summit_1792820111711.jpg',
     // To link verified YouTube footage, set youtubeId: "YOUR_YOUTUBE_VIDEO_ID"
     youtubeId: undefined,
     isVerifiedVideo: false,
@@ -143,7 +143,7 @@ export const VIDEO_STORIES: VideoStory[] = [
     duration: 'Convention Keynote',
     venue: 'Asian Networkers Convention & Expo Annual Assembly',
     year: 'Documented Assembly',
-    thumbnail: '/src/assets/images/video_keynote_stage_1792820109019.jpg',
+    thumbnail: '/assets/images/video_keynote_stage_1792820109019.jpg',
     // To link verified YouTube footage, set youtubeId: "YOUR_YOUTUBE_VIDEO_ID"
     youtubeId: undefined,
     isVerifiedVideo: false,
@@ -163,7 +163,7 @@ export const VIDEO_STORIES: VideoStory[] = [
     duration: 'Public Address',
     venue: 'Central Kannada Church & Community Gathering, Bangalore',
     year: 'Documented Address',
-    thumbnail: '/src/assets/images/perspectives_business_strategy_1792820111186.jpg',
+    thumbnail: '/assets/images/perspectives_business_strategy_1792820111186.jpg',
     // To link verified YouTube footage, set youtubeId: "YOUR_YOUTUBE_VIDEO_ID"
     youtubeId: undefined,
     isVerifiedVideo: false,
@@ -183,7 +183,7 @@ export const VIDEO_STORIES: VideoStory[] = [
     duration: 'Technology Colloquium',
     venue: 'Asia Tech & Blockchain Forum',
     year: 'Documented Colloquium',
-    thumbnail: '/src/assets/images/abstract_executive_architecture_1792821654541.jpg',
+    thumbnail: '/assets/images/abstract_executive_architecture_1792821654541.jpg',
     // To link verified YouTube footage, set youtubeId: "YOUR_YOUTUBE_VIDEO_ID"
     youtubeId: undefined,
     isVerifiedVideo: false,
@@ -206,7 +206,7 @@ export const PERSPECTIVE_ARTICLES: PerspectiveArticle[] = [
     category: 'Healthcare & Life Sciences',
     readingTime: '6 min read',
     publishedDate: 'Strategic Analysis',
-    image: '/src/assets/images/perspectives_healthcare_tech_1792820110980.jpg',
+    image: '/assets/images/perspectives_healthcare_tech_1792820110980.jpg',
     abstract:
       'Healthcare delivery is reaching an inflection point where isolated diagnostic tools must give way to integrated digital ecosystems. The true challenge is not data collection, but human-centered system synthesis.',
     content: [
@@ -227,7 +227,7 @@ export const PERSPECTIVE_ARTICLES: PerspectiveArticle[] = [
     category: 'Business Strategy',
     readingTime: '5 min read',
     publishedDate: 'Strategic Analysis',
-    image: '/src/assets/images/perspectives_business_strategy_1792820111186.jpg',
+    image: '/assets/images/perspectives_business_strategy_1792820111186.jpg',
     abstract:
       'Applying standard enterprise templates to South and Southeast Asian markets often proves ineffective. Sustainable expansion demands localized relationship networks anchored by compliant digital infrastructure.',
     content: [
@@ -248,7 +248,7 @@ export const PERSPECTIVE_ARTICLES: PerspectiveArticle[] = [
     category: 'Technology',
     readingTime: '7 min read',
     publishedDate: 'Strategic Analysis',
-    image: '/src/assets/images/network_global_summit_1792820111711.jpg',
+    image: '/assets/images/network_global_summit_1792820111711.jpg',
     abstract:
       'Digital transformation projects frequently stumble because organizations mistake software procurement for strategic restructuring. Architecture must follow business accountability.',
     content: [
@@ -269,7 +269,7 @@ export const PERSPECTIVE_ARTICLES: PerspectiveArticle[] = [
     category: 'Innovation',
     readingTime: '4 min read',
     publishedDate: 'Strategic Analysis',
-    image: '/src/assets/images/abstract_executive_architecture_1792821654541.jpg',
+    image: '/assets/images/abstract_executive_architecture_1792821654541.jpg',
     abstract:
       'In an era celebrated for velocity and rapid experimentation, enduring institutions are built on unshakeable foundations of governance, accountability, and ethical stewardship.',
     content: [

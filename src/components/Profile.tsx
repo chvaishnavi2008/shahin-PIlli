@@ -110,7 +110,7 @@ export const Profile: React.FC = () => {
                     {/* Authentic portrait thumbnail */}
                     <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-full overflow-hidden border-2 border-blue-500/40 shrink-0 bg-[#141622] shadow-xl shadow-blue-500/15">
                       <img
-                        src="/src/assets/images/shahin_pilli_avatar.png"
+                        src="/assets/images/shahin_pilli_avatar.png"
                         alt="Shahin Pilli - Official LinkedIn Profile Photo"
                         className="w-full h-full object-cover"
                         loading="lazy"
