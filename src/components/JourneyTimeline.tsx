@@ -1,12 +1,92 @@
 import React, { useState } from 'react';
 import { ArrowUpRight, CheckCircle2, ShieldCheck, ChevronLeft, ChevronRight, Sparkles, Building2, Globe, Cpu, Award } from 'lucide-react';
 import { JOURNEY_MILESTONES } from '../data/shahinData';
-import { RevealOnScroll } from './RevealOnScroll';
+import { useScrollReveal } from '../hooks/useScrollReveal';
+import { JourneyMilestone } from '../types';
+
+interface MilestoneNodeProps {
+  milestone: JourneyMilestone;
+  index: number;
+  isActive: boolean;
+  onClick: () => void;
+}
+
+/**
+ * Individual timeline milestone node featuring custom hook-based scroll reveal
+ * with staggered delays and graceful prefers-reduced-motion handling.
+ */
+const MilestoneNode: React.FC<MilestoneNodeProps> = ({
+  milestone,
+  index,
+  isActive,
+  onClick,
+}) => {
+  const { ref, style } = useScrollReveal<HTMLButtonElement>({
+    delayMs: 100 + index * 80,
+    direction: 'up',
+    distance: 22,
+  });
+
+  return (
+    <button
+      ref={ref}
+      style={style}
+      type="button"
+      onClick={onClick}
+      className={`p-4 rounded-2xl border text-left transition-all duration-300 relative group cursor-pointer focus-visible:ring-2 focus-visible:ring-blue-400 ${
+        isActive
+          ? 'bg-[#10121d] border-blue-500/80 shadow-xl shadow-blue-950/40 ring-1 ring-blue-500/50 scale-[1.02]'
+          : 'bg-[#0d0e15] border-white/[0.07] hover:border-white/[0.25] hover:bg-[#12131c] hover:scale-[1.01]'
+      }`}
+    >
+      <div className="flex items-center justify-between mb-2">
+        <span className={`text-xs font-mono-tabular font-semibold ${isActive ? 'text-blue-400' : 'text-slate-500'}`}>
+          0{index + 1}
+        </span>
+        <span
+          className={`w-2 h-2 rounded-full transition-colors ${
+            isActive ? 'bg-blue-400 shadow-sm shadow-blue-400' : 'bg-white/20'
+          }`}
+        />
+      </div>
+
+      <p
+        className={`text-xs font-bold truncate transition-colors ${
+          isActive ? 'text-white' : 'text-[#a4a199] group-hover:text-white'
+        }`}
+      >
+        {milestone.organization}
+      </p>
+      <p className="text-[11px] text-[#78756d] truncate mt-0.5">
+        {milestone.category}
+      </p>
+    </button>
+  );
+};
 
 export const JourneyTimeline: React.FC = () => {
   const [activeStageIndex, setActiveStageIndex] = useState(0);
 
   const activeMilestone = JOURNEY_MILESTONES[activeStageIndex];
+
+  // Ref-based scroll reveal hooks for each major JourneyTimeline section
+  const headerReveal = useScrollReveal<HTMLDivElement>({
+    delayMs: 50,
+    direction: 'up',
+    distance: 28,
+  });
+
+  const railReveal = useScrollReveal<HTMLDivElement>({
+    delayMs: 120,
+    direction: 'up',
+    distance: 24,
+  });
+
+  const stageReveal = useScrollReveal<HTMLDivElement>({
+    delayMs: 220,
+    direction: 'up',
+    distance: 30,
+  });
 
   const handleNext = () => {
     setActiveStageIndex((prev) => (prev + 1) % JOURNEY_MILESTONES.length);
@@ -40,8 +120,8 @@ export const JourneyTimeline: React.FC = () => {
       />
 
       <div className="max-w-7xl mx-auto px-6 sm:px-8 relative z-10">
-        {/* Section Header with Reveal */}
-        <RevealOnScroll direction="up" delayMs={50}>
+        {/* Section Header with useScrollReveal */}
+        <div ref={headerReveal.ref} style={headerReveal.style}>
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
             <div className="max-w-3xl space-y-3">
               <div className="flex items-center gap-2 text-xs font-semibold tracking-wider uppercase text-blue-400 font-mono-tabular">
@@ -85,59 +165,37 @@ export const JourneyTimeline: React.FC = () => {
               </div>
             </div>
           </div>
-        </RevealOnScroll>
+        </div>
 
-        {/* SIGNATURE INTERACTIVE NODE TRACK (Horizontal Node Rail) */}
-        <RevealOnScroll direction="up" delayMs={150}>
-          <div className="mb-12 relative">
-            {/* Continuous trajectory baseline rail */}
-            <div className="hidden md:block absolute top-1/2 left-0 right-0 h-[1.5px] bg-white/[0.1] -translate-y-1/2 z-0" />
-            
-            {/* Active progress fill with smooth physics */}
-            <div
-              className="hidden md:block absolute top-1/2 left-0 h-[2px] bg-blue-500 -translate-y-1/2 z-0 transition-all duration-500 ease-out"
-              style={{
-                width: `${(activeStageIndex / (JOURNEY_MILESTONES.length - 1)) * 100}%`,
-              }}
-            />
+        {/* SIGNATURE INTERACTIVE NODE TRACK (Horizontal Node Rail with useScrollReveal) */}
+        <div ref={railReveal.ref} style={railReveal.style} className="mb-12 relative">
+          {/* Continuous trajectory baseline rail */}
+          <div className="hidden md:block absolute top-1/2 left-0 right-0 h-[1.5px] bg-white/[0.1] -translate-y-1/2 z-0" />
+          
+          {/* Active progress fill with smooth physics */}
+          <div
+            className="hidden md:block absolute top-1/2 left-0 h-[2px] bg-blue-500 -translate-y-1/2 z-0 transition-all duration-500 ease-out"
+            style={{
+              width: `${(activeStageIndex / (JOURNEY_MILESTONES.length - 1)) * 100}%`,
+            }}
+          />
 
-            {/* Node buttons row */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 md:gap-4 relative z-10">
-              {JOURNEY_MILESTONES.map((m, idx) => {
-                const isActive = activeStageIndex === idx;
-                return (
-                  <button
-                    key={m.id}
-                    type="button"
-                    onClick={() => setActiveStageIndex(idx)}
-                    className={`p-4 rounded-2xl border text-left transition-all duration-300 relative group cursor-pointer focus-visible:ring-2 focus-visible:ring-blue-400 ${
-                      isActive
-                        ? 'bg-[#10121d] border-blue-500/80 shadow-xl shadow-blue-950/40 ring-1 ring-blue-500/50 scale-[1.02]'
-                        : 'bg-[#0d0e15] border-white/[0.07] hover:border-white/[0.25] hover:bg-[#12131c] hover:scale-[1.01]'
-                    }`}
-                  >
-                    <div className="flex items-center justify-between mb-2">
-                      <span className={`text-xs font-mono-tabular font-semibold ${isActive ? 'text-blue-400' : 'text-slate-500'}`}>
-                        0{idx + 1}
-                      </span>
-                      <span className={`w-2 h-2 rounded-full transition-colors ${isActive ? 'bg-blue-400 shadow-sm shadow-blue-400' : 'bg-white/20'}`} />
-                    </div>
-
-                    <p className={`text-xs font-bold truncate transition-colors ${isActive ? 'text-white' : 'text-[#a4a199] group-hover:text-white'}`}>
-                      {m.organization}
-                    </p>
-                    <p className="text-[11px] text-[#78756d] truncate mt-0.5">
-                      {m.category}
-                    </p>
-                  </button>
-                );
-              })}
-            </div>
+          {/* Node buttons row - each timeline milestone fades and slides into view via useScrollReveal */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 md:gap-4 relative z-10">
+            {JOURNEY_MILESTONES.map((milestone, idx) => (
+              <MilestoneNode
+                key={milestone.id}
+                milestone={milestone}
+                index={idx}
+                isActive={activeStageIndex === idx}
+                onClick={() => setActiveStageIndex(idx)}
+              />
+            ))}
           </div>
-        </RevealOnScroll>
+        </div>
 
-        {/* ACTIVE STAGE EDITORIAL BRIEFING CANVAS WITH ANIM-STAGE-CARD */}
-        <RevealOnScroll direction="up" delayMs={200}>
+        {/* ACTIVE STAGE EDITORIAL BRIEFING CANVAS WITH useScrollReveal */}
+        <div ref={stageReveal.ref} style={stageReveal.style}>
           <div
             key={activeMilestone.id}
             className="anim-stage-card rounded-3xl bg-[#0d0e16] border border-white/[0.1] shadow-2xl p-8 sm:p-12 relative overflow-hidden"
@@ -247,7 +305,7 @@ export const JourneyTimeline: React.FC = () => {
               </div>
             </div>
           </div>
-        </RevealOnScroll>
+        </div>
       </div>
     </section>
   );

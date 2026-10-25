@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { ArrowUpRight, ShieldCheck, Compass, Play, Copy, Check, MapPin, Sparkles, ChevronDown } from 'lucide-react';
 import { PERSONAL_INFO } from '../data/shahinData';
 
@@ -8,6 +8,195 @@ interface HeroProps {
 
 export const Hero: React.FC<HeroProps> = ({ onWatchIntro }) => {
   const [copied, setCopied] = useState(false);
+
+  // React ref-based orchestration targets
+  const kickerRef = useRef<HTMLDivElement>(null);
+  const roleKickerRef = useRef<HTMLSpanElement>(null);
+  const shahinRef = useRef<HTMLSpanElement>(null);
+  const pilliRef = useRef<HTMLSpanElement>(null);
+  const portraitRef = useRef<HTMLDivElement>(null);
+  const subtitleRef = useRef<HTMLParagraphElement>(null);
+  const bioRef = useRef<HTMLParagraphElement>(null);
+  const actionsRef = useRef<HTMLDivElement>(null);
+  const stripRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    // Check for reduced motion preference
+    const prefersReducedMotion =
+      typeof window !== 'undefined' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    const allElements = [
+      kickerRef.current,
+      roleKickerRef.current,
+      shahinRef.current,
+      pilliRef.current,
+      portraitRef.current,
+      subtitleRef.current,
+      bioRef.current,
+      actionsRef.current,
+      stripRef.current,
+    ].filter(Boolean) as HTMLElement[];
+
+    // If reduced-motion is requested, ensure immediate visibility
+    if (prefersReducedMotion) {
+      allElements.forEach((el) => {
+        el.style.opacity = '1';
+        el.style.transform = 'none';
+      });
+      return;
+    }
+
+    // Initialize elements to concealed state before orchestrated timeline fires
+    allElements.forEach((el) => {
+      el.style.opacity = '0';
+      el.style.willChange = 'transform, opacity';
+    });
+
+    // Check Web Animations API support
+    const supportsWaapi =
+      allElements.length > 0 && typeof allElements[0].animate === 'function';
+
+    if (!supportsWaapi) {
+      allElements.forEach((el) => {
+        el.style.opacity = '1';
+        el.style.transform = 'none';
+      });
+      return;
+    }
+
+    const activeAnimations: Animation[] = [];
+    const activeTimeouts: NodeJS.Timeout[] = [];
+
+    // Precise orchestration sequence: hero-name, portrait, subtitle, bio, action buttons, and strip
+    const choreography = [
+      {
+        target: kickerRef.current,
+        delay: 50,
+        duration: 650,
+        keyframes: [
+          { opacity: 0, transform: 'translateY(14px)' },
+          { opacity: 1, transform: 'translateY(0)' },
+        ],
+      },
+      {
+        target: roleKickerRef.current,
+        delay: 90,
+        duration: 650,
+        keyframes: [
+          { opacity: 0, transform: 'translateY(14px)' },
+          { opacity: 1, transform: 'translateY(0)' },
+        ],
+      },
+      {
+        target: shahinRef.current,
+        delay: 140,
+        duration: 800,
+        keyframes: [
+          { opacity: 0, transform: 'translateY(100%)' },
+          { opacity: 1, transform: 'translateY(0)' },
+        ],
+      },
+      {
+        target: pilliRef.current,
+        delay: 270,
+        duration: 800,
+        keyframes: [
+          { opacity: 0, transform: 'translateY(100%)' },
+          { opacity: 1, transform: 'translateY(0)' },
+        ],
+      },
+      {
+        target: portraitRef.current,
+        delay: 380,
+        duration: 950,
+        keyframes: [
+          { opacity: 0, transform: 'scale(0.88) translateY(18px)' },
+          { opacity: 1, transform: 'scale(1) translateY(0)' },
+        ],
+      },
+      {
+        target: subtitleRef.current,
+        delay: 490,
+        duration: 750,
+        keyframes: [
+          { opacity: 0, transform: 'translateY(20px)' },
+          { opacity: 1, transform: 'translateY(0)' },
+        ],
+      },
+      {
+        target: bioRef.current,
+        delay: 620,
+        duration: 750,
+        keyframes: [
+          { opacity: 0, transform: 'translateY(18px)' },
+          { opacity: 1, transform: 'translateY(0)' },
+        ],
+      },
+      {
+        target: actionsRef.current,
+        delay: 750,
+        duration: 750,
+        keyframes: [
+          { opacity: 0, transform: 'translateY(18px)' },
+          { opacity: 1, transform: 'translateY(0)' },
+        ],
+      },
+      {
+        target: stripRef.current,
+        delay: 890,
+        duration: 800,
+        keyframes: [
+          { opacity: 0, transform: 'translateY(22px)' },
+          { opacity: 1, transform: 'translateY(0)' },
+        ],
+      },
+    ];
+
+    choreography.forEach(({ target, delay, duration, keyframes }) => {
+      if (!target) return;
+
+      const timer = setTimeout(() => {
+        try {
+          const anim = target.animate(keyframes, {
+            duration,
+            easing: 'cubic-bezier(0.16, 1, 0.3, 1)',
+            fill: 'forwards',
+          });
+          activeAnimations.push(anim);
+          anim.onfinish = () => {
+            target.style.opacity = '1';
+            target.style.transform = 'none';
+          };
+        } catch {
+          target.style.opacity = '1';
+          target.style.transform = 'none';
+        }
+      }, delay);
+
+      activeTimeouts.push(timer);
+    });
+
+    // Safety fallback: ensure all elements become visible if any unexpected interruption occurs
+    const safetyTimer = setTimeout(() => {
+      allElements.forEach((el) => {
+        el.style.opacity = '1';
+        el.style.transform = 'none';
+      });
+    }, 2200);
+
+    return () => {
+      clearTimeout(safetyTimer);
+      activeTimeouts.forEach((t) => clearTimeout(t));
+      activeAnimations.forEach((a) => {
+        try {
+          a.cancel();
+        } catch {
+          // ignore
+        }
+      });
+    };
+  }, []);
 
   const handleCopyLink = () => {
     navigator.clipboard.writeText(PERSONAL_INFO.linkedinUrl);
@@ -25,13 +214,13 @@ export const Hero: React.FC<HeroProps> = ({ onWatchIntro }) => {
 
   return (
     <section className="relative min-h-[92vh] lg:min-h-screen flex flex-col justify-between pt-28 pb-16 md:pt-36 md:pb-20 overflow-hidden bg-[#06070a]">
-      {/* Cinematic atmospheric depth lighting */}
+      {/* Cinematic atmospheric depth lighting - dynamic slowly moving ambient blue light */}
       <div
-        className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[850px] h-[550px] bg-blue-600/[0.04] blur-[170px] pointer-events-none rounded-full"
+        className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[750px] h-[520px] bg-blue-600/[0.08] blur-[140px] pointer-events-none rounded-full hero-ambient-orb-1"
         aria-hidden="true"
       />
       <div
-        className="absolute top-1/3 right-1/4 w-[480px] h-[480px] bg-sky-500/[0.03] blur-[150px] pointer-events-none rounded-full"
+        className="absolute top-1/3 right-1/4 w-[480px] h-[480px] bg-sky-500/[0.06] blur-[150px] pointer-events-none rounded-full hero-ambient-orb-2"
         aria-hidden="true"
       />
       <div className="absolute inset-0 bg-grid-pattern opacity-25 pointer-events-none" aria-hidden="true" />
@@ -39,7 +228,10 @@ export const Hero: React.FC<HeroProps> = ({ onWatchIntro }) => {
       {/* Main Architectural Hero Container */}
       <div className="max-w-7xl mx-auto px-6 sm:px-8 w-full relative z-10 flex-1 flex flex-col justify-between">
         {/* Editorial Sub-Header / Kicker Bar */}
-        <div className="hero-anim-kicker pt-2 pb-6 border-b border-white/[0.06] flex flex-wrap items-center justify-between gap-y-3 gap-x-6 text-xs text-[#a4a199]">
+        <div
+          ref={kickerRef}
+          className="pt-2 pb-6 border-b border-white/[0.06] flex flex-wrap items-center justify-between gap-y-3 gap-x-6 text-xs text-[#a4a199]"
+        >
           <div className="flex items-center gap-2 font-mono-tabular tracking-wider uppercase text-blue-400">
             <span>Executive Portfolio</span>
             <span className="text-white/20" aria-hidden="true">·</span>
@@ -69,33 +261,51 @@ export const Hero: React.FC<HeroProps> = ({ onWatchIntro }) => {
         <div className="my-auto py-10 lg:py-14 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
           {/* Left Column: Monumental Name & Philosophical Headline */}
           <div className="lg:col-span-7 space-y-6">
-            <div className="hero-anim-headline space-y-3">
-              <span className="text-xs font-semibold tracking-widest uppercase text-blue-400 block font-mono-tabular">
+            <div className="space-y-3">
+              <span
+                ref={roleKickerRef}
+                className="text-xs font-semibold tracking-widest uppercase text-blue-400 block font-mono-tabular"
+              >
                 Founder & Chief Executive Officer
               </span>
 
-              {/* Central Visual Focus: Monumental Sculptural Typography */}
+              {/* Central Visual Focus: Monumental Sculptural Typography with Staggered Word Reveal */}
               <h1 className="text-5xl sm:text-7xl md:text-8xl lg:text-[6.8rem] font-bold tracking-tighter text-[#f5f5f0] leading-[0.92] uppercase">
-                SHAHIN <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-[#eae6de] to-blue-200">
-                  PILLI
+                <span className="block overflow-hidden pb-1">
+                  <span ref={shahinRef} className="hero-name-shahin">
+                    SHAHIN
+                  </span>
+                </span>
+                <span className="block overflow-hidden pt-1">
+                  <span
+                    ref={pilliRef}
+                    className="hero-name-pilli text-transparent bg-clip-text bg-gradient-to-r from-white via-[#eae6de] to-blue-200"
+                  >
+                    PILLI
+                  </span>
                 </span>
               </h1>
             </div>
 
             {/* Design Concept: "The Human Side of Innovation" */}
             <div className="space-y-4 max-w-2xl pt-2">
-              <p className="hero-anim-subtitle text-xl sm:text-2xl md:text-3xl font-serif italic text-blue-300/90 leading-tight">
+              <p
+                ref={subtitleRef}
+                className="text-xl sm:text-2xl md:text-3xl font-serif italic text-blue-300/90 leading-tight"
+              >
                 "The Human Side of Innovation"
               </p>
               
-              <p className="hero-anim-bio text-base sm:text-lg text-[#b8b5ad] leading-relaxed font-normal">
+              <p
+                ref={bioRef}
+                className="text-base sm:text-lg text-[#b8b5ad] leading-relaxed font-normal"
+              >
                 Connecting enterprise strategy, emerging software ecosystems, and values-driven leadership. Founder & CEO of <strong className="text-white font-medium">Pilli Group</strong>, conceptualizer of the <strong className="text-white font-medium">Asian Networkers Convention & Expo (ANCE)</strong>, and founder of <strong className="text-white font-medium">World of Professionals</strong>.
               </p>
             </div>
 
             {/* Primary Executive Actions */}
-            <div className="hero-anim-actions pt-4 flex flex-wrap items-center gap-4">
+            <div ref={actionsRef} className="pt-4 flex flex-wrap items-center gap-4">
               <a
                 href="#journey"
                 onClick={(e) => scrollToSection(e, 'journey')}
@@ -130,7 +340,7 @@ export const Hero: React.FC<HeroProps> = ({ onWatchIntro }) => {
           </div>
 
           {/* Right Column: Architectural Portrait Framing */}
-          <div className="lg:col-span-5 relative flex items-center justify-center hero-anim-portrait">
+          <div ref={portraitRef} className="lg:col-span-5 relative flex items-center justify-center">
             <div className="relative w-full max-w-md lg:max-w-none group">
               {/* Backing Ambient Illumination */}
               <div className="absolute -inset-3 bg-gradient-to-tr from-blue-600/25 via-sky-500/15 to-transparent rounded-3xl blur-2xl opacity-70 group-hover:opacity-95 transition-opacity duration-700 pointer-events-none" />
@@ -211,7 +421,7 @@ export const Hero: React.FC<HeroProps> = ({ onWatchIntro }) => {
         </div>
 
         {/* 4-Pillar Architectural Strip in Full-Width Row Below Split */}
-        <div className="hero-anim-strip pt-8 border-t border-white/[0.08]">
+        <div ref={stripRef} className="pt-8 border-t border-white/[0.08]">
           <div className="flex items-center justify-between mb-4">
             <span className="text-xs font-semibold uppercase tracking-widest text-slate-400 font-mono-tabular">
               Core Strategic Initiatives
