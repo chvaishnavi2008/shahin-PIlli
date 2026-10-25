@@ -215,14 +215,18 @@ export const Hero: React.FC<HeroProps> = ({ onWatchIntro }) => {
   return (
     <section className="relative min-h-[92vh] lg:min-h-screen flex flex-col justify-between pt-28 pb-16 md:pt-36 md:pb-20 overflow-hidden bg-[#06070a]">
       {/* Cinematic atmospheric depth lighting - dynamic slowly moving ambient blue light */}
-      <div
-        className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[750px] h-[520px] bg-blue-600/[0.08] blur-[140px] pointer-events-none rounded-full hero-ambient-orb-1"
-        aria-hidden="true"
-      />
-      <div
-        className="absolute top-1/3 right-1/4 w-[480px] h-[480px] bg-sky-500/[0.06] blur-[150px] pointer-events-none rounded-full hero-ambient-orb-2"
-        aria-hidden="true"
-      />
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
+        <div
+          className="w-[750px] h-[520px] bg-blue-600/[0.09] blur-[140px] rounded-full hero-ambient-orb-1"
+          aria-hidden="true"
+        />
+      </div>
+      <div className="absolute top-1/3 right-1/4 pointer-events-none">
+        <div
+          className="w-[480px] h-[480px] bg-sky-500/[0.07] blur-[150px] rounded-full hero-ambient-orb-2"
+          aria-hidden="true"
+        />
+      </div>
       <div className="absolute inset-0 bg-grid-pattern opacity-25 pointer-events-none" aria-hidden="true" />
 
       {/* Main Architectural Hero Container */}
@@ -309,7 +313,7 @@ export const Hero: React.FC<HeroProps> = ({ onWatchIntro }) => {
               <a
                 href="#journey"
                 onClick={(e) => scrollToSection(e, 'journey')}
-                className="px-6 py-3.5 bg-blue-600 hover:bg-blue-500 text-white font-semibold text-sm rounded-xl transition-all duration-200 shadow-xl shadow-blue-600/30 active:scale-[0.98] inline-flex items-center gap-2 focus-visible:ring-2 focus-visible:ring-blue-400"
+                className="px-6 py-3.5 bg-blue-600 hover:bg-blue-500 text-white font-semibold text-sm rounded-xl transition-all duration-200 shadow-xl shadow-blue-600/30 hover:shadow-blue-500/40 hover:-translate-y-0.5 active:scale-[0.98] inline-flex items-center gap-2 focus-visible:ring-2 focus-visible:ring-blue-400"
               >
                 <Compass className="w-4 h-4" />
                 <span>Explore Signature Trajectory</span>
@@ -319,7 +323,7 @@ export const Hero: React.FC<HeroProps> = ({ onWatchIntro }) => {
                 href={PERSONAL_INFO.linkedinUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-5 py-3.5 bg-white/[0.04] hover:bg-white/[0.09] text-[#f5f5f0] border border-white/[0.12] hover:border-blue-500/40 font-medium text-sm rounded-xl transition-all duration-200 inline-flex items-center gap-2 active:scale-[0.98] group focus-visible:ring-2 focus-visible:ring-blue-400"
+                className="px-5 py-3.5 bg-white/[0.04] hover:bg-white/[0.09] text-[#f5f5f0] border border-white/[0.12] hover:border-blue-500/50 hover:shadow-lg hover:shadow-blue-950/30 hover:-translate-y-0.5 font-medium text-sm rounded-xl transition-all duration-200 inline-flex items-center gap-2 active:scale-[0.98] group focus-visible:ring-2 focus-visible:ring-blue-400"
               >
                 <ShieldCheck className="w-4 h-4 text-blue-400 group-hover:scale-110 transition-transform" />
                 <span>Verify on LinkedIn</span>
@@ -330,7 +334,7 @@ export const Hero: React.FC<HeroProps> = ({ onWatchIntro }) => {
                 <button
                   type="button"
                   onClick={onWatchIntro}
-                  className="px-4 py-3.5 text-xs font-semibold text-[#a4a199] hover:text-white transition-colors inline-flex items-center gap-2 cursor-pointer focus-visible:ring-2 focus-visible:ring-blue-400"
+                  className="px-4 py-3.5 text-xs font-semibold text-[#a4a199] hover:text-white hover:bg-white/[0.04] rounded-xl transition-all inline-flex items-center gap-2 cursor-pointer focus-visible:ring-2 focus-visible:ring-blue-400 active:scale-[0.98]"
                 >
                   <Play className="w-3.5 h-3.5 text-blue-400 fill-blue-400" />
                   <span>Keynote Recordings</span>

@@ -172,6 +172,20 @@
   animation: stageCardFade 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
+/* Modal & Backdrop Fade Transition */
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
 /* ========================================================
    ANIMATION 4 — INTERACTIVE HOVER & FOCUS STATES
    ======================================================== */
@@ -210,7 +224,8 @@
   .hero-ambient-orb-1,
   .hero-ambient-orb-2,
   .anim-pulse-glow,
-  .anim-stage-card {
+  .anim-stage-card,
+  .animate-fade-in {
     animation: none !important;
     opacity: 1 !important;
     transform: none !important;
